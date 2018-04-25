@@ -53,7 +53,8 @@ class Door {}
 
 ```
 --eval
-cl Door>fn open doorId
+cl Door
+    fn open doorId void
 
 --config
 no extra config
@@ -62,7 +63,7 @@ no extra config
 
 class Door
 {
-    public function open($doorId)
+    public function open($doorId) : void
     {
     }
 }

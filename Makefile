@@ -7,4 +7,4 @@ test: compile
 	./run_tests.sh
 
 run: compile
-	./subs
+	echo 'fn'  | ./subs
