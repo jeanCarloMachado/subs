@@ -18,12 +18,9 @@ test_expect_success "email" "
     test $result = contato@jeancarlomachado.com.br
 "
 
-result=$(echo 'fn' | subs)
-test_expect_same "replaces complex line" "$result" 'public function %s ()\n{\n\n}'
+test_expect_same "replaces complex line" "$(echo 'fn a b' | subs)" 'public function a (b)\n{\n\n}'
 
-
-result=$(echo 'cl Car' | subs)
-test_expect_same "substitute variable" "$result" 'class Car\n{\n\n}'
+test_expect_same "substitute variable" "$(echo 'cl Car' | subs)" 'class Car\n{\n\n}'
 
 
 test_done
