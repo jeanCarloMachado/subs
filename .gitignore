@@ -1,3 +1,5 @@
 test-results
+subs.cabal
 *.o
 *.hi
+.stack-work/

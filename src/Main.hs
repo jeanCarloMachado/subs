@@ -1,3 +1,4 @@
+module Main where
 
 import Data.Ini
 import Data.Text (pack,unpack, splitOn)
@@ -8,8 +9,8 @@ import Data.Typeable
 import Data.List
 import Debug.Trace
 
+main :: IO ()
 main = do
-
         iniFile <- readIniFile "/home/jean/Dropbox/projects/subs/default.ini"
         input <- getContents
         let
@@ -30,7 +31,6 @@ processEntry :: String -> [String] -> String
 processEntry match [] = match
 processEntry match (x:xs) =
         processEntry (getPart match x) xs
-
 
 getPart match arg =
     case idx of
