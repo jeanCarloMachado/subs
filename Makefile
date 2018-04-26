@@ -8,3 +8,6 @@ test: compile
 
 run: compile
 	echo 'fn'  | ./subs
+
+compileHard:
+	ghc --make subs.hs

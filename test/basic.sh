@@ -18,7 +18,6 @@ test_expect_success "email" "
     test $result = contato@jeancarlomachado.com.br
 "
 
-
 result=$(echo 'fn' | subs)
 test_expect_same "replaces complex line" "$result" 'public function %s ()\n{\n\n}'
 
