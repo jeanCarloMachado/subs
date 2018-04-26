@@ -20,6 +20,8 @@ test_expect_success "email" "
 
 test_expect_same "replaces complex line" "$(echo 'fn a b' | subs)" 'public function a (b)\n{\n\n}'
 
+test_expect_same "replaces partial arguments keep rest empty" "$(echo 'fn a' | subs)" 'public function a ()\n{\n\n}'
+
 test_expect_same "substitute variable" "$(echo 'cl Car' | subs)" 'class Car\n{\n\n}'
 
 
