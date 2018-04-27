@@ -22,11 +22,17 @@ main = do
 processAll ini input =
   if linesCount > 1
  then
-    addChildren (rootIdentationLevel ( processUnit (getIniMatch ini (head (getArguments (lines input !! 0)))) (tail (getArguments (lines input !! 0)))) input) (processUnit (getIniMatch ini (head (getArguments (lines input !! 1)))) (tail (getArguments ( lines input !! 1))))
+     rootIdentationLevel (addChildren rootProcess (intercalate "\n    " (map (parseLine ini) (tail (lines input))))) input
   else
-    rootIdentationLevel (processUnit (getIniMatch ini (head (getArguments (lines input !! 0)))) (tail (getArguments (lines input !! 0)))) input
+    rootIdentationLevel rootProcess input
+    
   where
       linesCount = length (lines input)
+      rootProcess = parseLine ini (lines input !! 0)
+
+
+parseLine ini line = 
+    processUnit (getIniMatch ini (head (getArguments (line)))) (tail (getArguments (line)))
 
 rootIdentationLevel result input  =
   replace "\\n" ("\\n" ++ takeWhile isSpace input) ( (takeWhile isSpace input) ++ result)
