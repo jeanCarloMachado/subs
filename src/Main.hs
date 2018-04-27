@@ -33,8 +33,8 @@ processNode ini linesToProcess =
     where
       currentLine  = linesToProcess !! 0
       literalLine = currentLine
-      match = (getIniMatch ini (head (getArguments (currentLine))))
-      arguments = (tail (getArguments (currentLine)))
+      match = getIniMatch ini (head (getArguments (currentLine)))
+      arguments = tail (getArguments (currentLine))
       nodeStr = processArguments  match arguments
       nextNodes = processNode ini (tail linesToProcess)
 

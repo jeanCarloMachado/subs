@@ -1,7 +1,7 @@
 #!/bin/sh
 
 test_expect_same() {
-    test "$2" =  "$3"
+    test "$2" = "$3"
     isEqual=$?
     test_expect_success "$1" "
         test $isEqual = 0
@@ -14,21 +14,21 @@ test_description="Basic features"
 
 result=$(echo 'myMail' | subs)
 
+myMail
 test_expect_success "email" "
     test $result = contato@jeancarlomachado.com.br
 "
 
-test_expect_same "replaces complex line" "$(echo 'fn a b' | subs)" 'public function a (b)\n{\n\n}'
+test_expect_same "replaces complex line" "$(echo 'af a' | subs)" 'function ($a)\n{\n\n}'
 
-test_expect_same "replaces partial arguments keep rest empty" "$(echo 'fn a' | subs)" 'public function a ()\n{\n\n}'
+test_expect_same "replaces partial arguments keep rest empty" "$(echo 'pf a' | subs)" 'public function a ()\n{\n\n}'
 
-test_expect_same "substitute variable" "$(echo 'cl Car' | subs)" 'class Car\n{\n%c\n}'
+test_expect_same "substitute variable" "$(echo 'cl Car' | subs)" 'class Car\n{\n\n}'
 
-definition='cl Car
-  fn turnOn
-'
+result=$(subs <<< 'cl Car
+  pf turnOn')
 
-test_expect_same "nested" "$(echo \"$definition\"  | subs)" 'class Car\n{\n    public function turnOn ()\n    {\n    \n    }\n    }'
+test_expect_same "nested" "$result" 'class Car\n{\n    public function turnOn ()\n    {\n    \n    }\n}' ;
 
 
 test_done

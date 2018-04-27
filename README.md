@@ -13,15 +13,8 @@ We are used to messy languages and they could be improved.
 
 
 cl person
-	pf isBad
+	pf isBad name
 
-cl dog
-  co color
-  pf bark people
-  fe people person
-    if person->isbad()
-      $this->bark()
-  pf bite person
 
 cl dog
   co color
