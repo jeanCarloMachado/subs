@@ -19,37 +19,47 @@ main = do
     Left error -> putStr error
     Right ini -> putStr (processAll ini input)
 
+processAll :: Ini -> String -> String
 processAll ini input =
-  if linesCount > 1
- then
-     rootIdentationLevel (addChildren rootProcess (intercalate "\n    " (map (parseLine ini) (tail (lines input))))) input
-  else
-    rootIdentationLevel rootProcess input
-    
+     copyIdentationLevel rootProcess input
   where
-      linesCount = length (lines input)
-      rootProcess = parseLine ini (lines input !! 0)
+      rootProcess = processNode ini (lines input)
+
+processNode _  [] =  ""
+processNode ini linesToProcess =
+    if match == ""
+    then addSibling literalLine nextNodes
+    else add linesToProcess nodeStr nextNodes
+    where
+      currentLine  = linesToProcess !! 0
+      literalLine = currentLine
+      match = (getIniMatch ini (head (getArguments (currentLine))))
+      arguments = (tail (getArguments (currentLine)))
+      nodeStr = processArguments  match arguments
+      nextNodes = processNode ini (tail linesToProcess)
+
+add :: [String] -> String -> String -> String
+add lines current next =
+   if nextIsChild lines
+   then addChild current next
+   else addSibling current next
 
 
-parseLine ini line = 
-    processUnit (getIniMatch ini (head (getArguments (line)))) (tail (getArguments (line)))
+nextIsChild [x] = True
+nextIsChild lines =
+    if identationInNext > identationInCurrent
+    then True
+    else False
+  where
+    currentLine  = lines !! 0
+    identationInCurrent = length (takeWhile isSpace currentLine)
+    nextLine  = lines !! 1
+    identationInNext = length (takeWhile isSpace nextLine)
 
-rootIdentationLevel result input  =
-  replace "\\n" ("\\n" ++ takeWhile isSpace input) ( (takeWhile isSpace input) ++ result)
 
-
-addChildren :: String -> String -> String
-addChildren parent children =
-  replace "%c" (replace "\\n" "\\n    " ("    " ++ children)) parent
-
-
-getArguments input =
-       separateBy ' ' (dropWhile isSpace input)
-
-processUnit :: String -> [String] -> String
-processUnit match arguments =
+processArguments match arguments =
   case idx of
-    Just x -> processUnit (replaced ++ (snd pair)) aTail
+    Just x -> processArguments (replaced ++ (snd pair)) aTail
       where pair = splitAt' (x + 2) match
             replaced = replace "%s" aHead (fst pair)
     Nothing -> match
@@ -57,6 +67,28 @@ processUnit match arguments =
     idx = substringP "%s" match
     aHead = argHead arguments
     aTail = argTail arguments
+
+
+copyIdentationLevel result compare  =
+  replace "\\n" ("\\n" ++ compareSpaces) (compareSpaces ++ result)
+  where
+  compareSpaces = takeWhile isSpace compare
+
+addSibling a b =
+  newA ++ copyIdentationLevel ("\\n" ++ b) a
+  where
+    newA = replace "%c" "" a
+
+
+addChild :: String -> String -> String
+addChild parent   ""  = replace "%c" "" parent
+addChild parent children =
+  replace "%c" (replace "\\n" "\\n    " ("    " ++ children)) parent
+
+
+getArguments input =
+       separateBy ' ' (dropWhile isSpace input)
+
 
 argTail arguments =
   if len > 1
@@ -74,7 +106,7 @@ argHead arguments =
 
 getIniMatch ini value =
   case either of
-    Left msg   -> error msg
+    Left msg   -> "" 
     Right text -> unpack text
   where
     either = lookupValue (pack "global") (pack value) ini
