@@ -22,7 +22,13 @@ test_expect_same "replaces complex line" "$(echo 'fn a b' | subs)" 'public funct
 
 test_expect_same "replaces partial arguments keep rest empty" "$(echo 'fn a' | subs)" 'public function a ()\n{\n\n}'
 
-test_expect_same "substitute variable" "$(echo 'cl Car' | subs)" 'class Car\n{\n\n}'
+test_expect_same "substitute variable" "$(echo 'cl Car' | subs)" 'class Car\n{\n%c\n}'
+
+definition='cl Car
+  fn turnOn
+'
+
+test_expect_same "nested" "$(echo \"$definition\"  | subs)" 'class Car\n{\n    public function turnOn ()\n    {\n    \n    }\n    }'
 
 
 test_done

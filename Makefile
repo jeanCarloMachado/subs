@@ -4,6 +4,7 @@ all: compile install
 
 install:
 	stack install
+	cp -rf /home/jean/.local/bin/subs /home/jean/Dropbox
 
 compile:
 	stack build
