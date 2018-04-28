@@ -26,9 +26,23 @@ test_expect_same "replaces partial arguments keep rest empty" "$(echo 'pf a' | s
 test_expect_same "substitute variable" "$(echo 'cl Car' | subs)" 'class Car\n{\n\n}'
 
 result=$(subs <<< 'cl Car
-  pf turnOn')
+ pf turnOn')
 
-test_expect_same "nested" "$result" 'class Car\n{\n    public function turnOn ()\n    {\n    \n    }\n}' ;
+test_expect_same "nested" "$result" 'class Car\n{\n public function turnOn ()\n {\n \n }\n}' ;
+
+
+result=$(subs <<< 'cl dog
+  co color
+  pf bite person
+    $person->isHurt();
+  pf bark people
+    fe people person
+      if person->isbad()
+        $this->bark()')
+
+test_expect_same "complex nested" "$result" 'class dog\n{\n  public function __constructor($color)\n  {\n  \n  }
+  public function bite (person)\n  {\n          $person->isHurt();\n  }
+  public function bark (people)\n  {\n      foreach ($people as $person) {\n            if(person->isbad()) {\n                            $this->bark()\n            }\n      }\n  }\n}' ;
 
 
 test_done
