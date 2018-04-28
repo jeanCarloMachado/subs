@@ -2,14 +2,20 @@ module Main where
 
 import           Data.Dynamic
 import           Data.Ini
-import           Data.List         (unfoldr, dropWhile)
+import           Data.List         (unfoldr, dropWhile )
 import           Data.List
+import           Data.List.Split (splitPlaces)
 import           Data.String.Utils
 import           Data.Text         (pack, splitOn, unpack)
 import           Data.Typeable
 import           Debug.Trace
 import           Text.Printf
 import           Data.Char  (isSpace)
+import           Data.Maybe (catMaybes)
+
+type Instruction = String
+type Arguments = [String]
+data Statement = Instruction Arguments
 
 main :: IO ()
 main = do
@@ -17,45 +23,65 @@ main = do
   input <- getContents
   case iniFile of
     Left error -> putStr error
-    Right ini -> putStr (processAll ini input)
+    Right ini -> putStr (processAll ini (lines input))
 
-processAll :: Ini -> String -> String
+processAll :: Ini -> [String] -> String
 processAll ini input =
-     copyIdentationLevel rootProcess input
+      intercalate "\n" (agregateNodes ini input)
+
+
+agregateNodes :: Ini -> [String] -> [String]
+agregateNodes ini lines =
+  map (\x -> copyIdentationLevel firstLine (processNode ini x)) sameLevel
   where
-      rootProcess = processNode ini (lines input)
+      firstLine = (head lines)
+      sameLevel = getSameLevelWithChildren firstLine lines
 
-processNode _  [] =  ""
-processNode ini linesToProcess =
+processNode ini lines =
+  addChild (getNodeValue ini line) (intercalate "\n" (agregateNodes ini (tail lines)))
+ where
+  line = head lines
+
+getNodeValue :: Ini -> String -> String
+getNodeValue ini line =
     if match == ""
-    then addSibling literalLine nextNodes
-    else add linesToProcess nodeStr nextNodes
+    then line
+    else  processArguments match arguments
     where
-      currentLine  = linesToProcess !! 0
-      literalLine = currentLine
-      match = getIniMatch ini (head (getArguments (currentLine)))
-      arguments = tail (getArguments (currentLine))
-      nodeStr = processArguments  match arguments
-      nextNodes = processNode ini (tail linesToProcess)
+      match = getIniMatch ini (head values)
+      values = getLineValues line
+      arguments = tail values
 
-add :: [String] -> String -> String -> String
-add lines current next =
-   if nextIsChild lines
-   then addChild current next
-   else addSibling current next
+getSameLevelWithChildren :: String -> [String] ->[[String]]
+getSameLevelWithChildren entry entries =
+ [] ++  (map (\indice -> getChildren entry (snd (splitAt' indice entries))) parentsIndices)
+  where
+  parents = filter (hasSameIdentationLevel entry) entries
+  parentsIndicesMaybe = map (\x -> elemIndex x entries) parents
+  parentsIndices = catMaybes parentsIndicesMaybe
+
+getChildren :: String -> [String] -> [String]
+getChildren ref entries =
+    [head entries] ++ takeWhile (\x -> not (hasSameIdentationLevel ref x)) (tail entries)
 
 
-nextIsChild [x] = True
-nextIsChild lines =
+
+hasSameIdentationLevel :: String -> String -> Bool
+hasSameIdentationLevel current next =
+    if identationInNext == identationInCurrent
+    then True
+    else False
+  where
+    identationInCurrent = length (takeWhile isSpace current)
+    identationInNext = length (takeWhile isSpace next)
+
+nextIsChild current next =
     if identationInNext > identationInCurrent
     then True
     else False
   where
-    currentLine  = lines !! 0
-    identationInCurrent = length (takeWhile isSpace currentLine)
-    nextLine  = lines !! 1
-    identationInNext = length (takeWhile isSpace nextLine)
-
+    identationInCurrent = length (takeWhile isSpace current)
+    identationInNext = length (takeWhile isSpace next)
 
 processArguments match arguments =
   case idx of
@@ -69,26 +95,21 @@ processArguments match arguments =
     aTail = argTail arguments
 
 
-copyIdentationLevel result compare  =
+copyIdentationLevel :: String -> String -> String
+copyIdentationLevel compare result =
   replace "\\n" ("\\n" ++ compareSpaces) (compareSpaces ++ result)
   where
   compareSpaces = takeWhile isSpace compare
-
-addSibling a b =
-  newA ++ copyIdentationLevel ("\\n" ++ b) a
-  where
-    newA = replace "%c" "" a
 
 
 addChild :: String -> String -> String
 addChild parent   ""  = replace "%c" "" parent
 addChild parent children =
-  replace "%c" (replace "\\n" "\\n    " ("    " ++ children)) parent
+  replace "%c"  children parent
 
 
-getArguments input =
+getLineValues input =
        separateBy ' ' (dropWhile isSpace input)
-
 
 argTail arguments =
   if len > 1
@@ -106,7 +127,7 @@ argHead arguments =
 
 getIniMatch ini value =
   case either of
-    Left msg   -> "" 
+    Left msg   -> ""
     Right text -> unpack text
   where
     either = lookupValue (pack "global") (pack value) ini

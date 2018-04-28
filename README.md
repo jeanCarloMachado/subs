@@ -13,7 +13,8 @@ We are used to messy languages and they could be improved.
 
 
 cl person
-	pf isBad name
+  pf isBad name
+  pf isBad name
 
 
 cl dog

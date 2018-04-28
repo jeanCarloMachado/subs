@@ -23,6 +23,7 @@ dependencies:
 - ini
 - text
 - MissingH
+- split
 
 executables:
   subs:
