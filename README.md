@@ -5,23 +5,9 @@ This project aims to reduce the amount of things we type.
 
 ## Examples:
 
-
-Given this rules on the config file default.ini:
-
-```ini
-pf=public function %s (%s)\n{\n%c\n}
-co=public function __constructor($%s)\n{\n%c\n}
-cl=class %s\n{\n%c\n}
-fe=foreach ($%s as $%s) {\n%c\n}
-if=if(%s) {\n%c\n}
-```
-
 The given code:
 
 ```
-<?php
-
-
 cl dog
   co color
   pf bite person
@@ -29,11 +15,9 @@ cl dog
     fe people person
       if person->isbad()
         $this->bark()
-
 ```
 
 Produces:
-
 
 ```php
 class dog
@@ -55,6 +39,49 @@ class dog
       }
   }
 }
+```
 
+
+Given this configuration on the file ~/subsconfig.ini:
+
+```ini
+[global]
+pf=public function %s (%s)\n{\n%c\n}
+co=public function __constructor($%s)\n{\n%c\n}
+cl=class %s\n{\n%c\n}
+fe=foreach ($%s as $%s) {\n%c\n}
+if=if(%s) {\n%c\n}
+```
+
+## Installation:
+
+```sh
+sudo wget -O /usr/local/bin/subs "https://www.dropbox.com/s/l3i53osfrrs5mhr/subs" && chmod +x /usr/local/bin/subs
+```
+
+
+## Usage
+
+After having your config just the text you want to substitute on the stdin.
+
+```sh
+subs <<< 'cl Gandalf'
+class Gandalf\n{\n\n}
+```
+
+
+## Integration
+
+The true power of subs comes when you integrate it on your text editor.
+
+For vim, using Tim Pope's textobject integration is simply a matter of:
+
+```vimscript
+fun! s:Subs(str)
+  let my_filetype = &filetype
+  let out = ChompedSystemCall('runFunction subsEval', a:str."\n")
+  return out
+endfunc
+call MapAction('Subs', '<leader>y')
 ```
 
