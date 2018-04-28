@@ -12,6 +12,8 @@ import           Debug.Trace
 import           Text.Printf
 import           Data.Char  (isSpace)
 import           Data.Maybe (catMaybes)
+import           System.Environment
+
 
 type Instruction = String
 type Arguments = [String]
@@ -19,11 +21,20 @@ data Statement = Instruction Arguments
 
 main :: IO ()
 main = do
-  iniFile <- readIniFile "/home/jean/Dropbox/projects/subs/default.ini"
   input <- getContents
+  configFile <- getConfigPath
+  iniFile <- readIniFile configFile
   case iniFile of
     Left error -> putStr error
     Right ini -> putStr (processAll ini (lines input))
+
+
+getConfigPath = do
+  env <- lookupEnv "SUBS_CONFIG"
+  home <- getEnv "HOME"
+  case env of
+    Just a -> return a
+    Nothing -> return (home ++ "/.subsconfig.ini")
 
 processAll :: Ini -> [String] -> String
 processAll ini input =

@@ -16,7 +16,7 @@ result=$(echo 'myMail' | subs)
 
 myMail
 test_expect_success "email" "
-    test $result = contato@jeancarlomachado.com.br
+    test $result = myMail@gmail.com
 "
 
 test_expect_same "replaces complex line" "$(echo 'af a' | subs)" 'function ($a)\n{\n\n}'
