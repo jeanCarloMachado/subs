@@ -62,7 +62,7 @@ sudo wget -O /usr/local/bin/subs "https://www.dropbox.com/s/l3i53osfrrs5mhr/subs
 
 ## Usage
 
-After having your config just the text you want to substitute on the stdin.
+After having your config just pipe the text to stdin.
 
 ```sh
 subs <<< 'cl Gandalf'

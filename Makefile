@@ -12,3 +12,7 @@ compile:
 test: compile
 	./run_tests.sh
 
+
+deploy:
+	upload_and_share /home/jean/Dropbox/subs
+
