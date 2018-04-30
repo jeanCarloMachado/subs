@@ -3,7 +3,6 @@
 
 export SUBS_CONFIG=$(pwd)/default.ini
 
-export PATH="$PATH:$(pwd)/test"
-
+export PATH="$(pwd)/test:$PATH"
 
 ./test/basic.sh

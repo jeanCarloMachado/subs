@@ -3,8 +3,7 @@
 # Copyright (c) 2011-2012 Mathias Lafeldt
 # Copyright (c) 2005-2012 Git project
 # Copyright (c) 2005-2012 Junio C Hamano
-#
-# This program is free software: you can redistribute it and/or modify
+# # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
@@ -428,6 +427,7 @@ test_expect_success() {
 	fi
 	echo >&3 ""
 }
+
 
 # Public: Run test commands and expect them to fail. Used to demonstrate a known
 # breakage.
@@ -879,3 +879,24 @@ test -n "$TEST_INTERACTIVE" && test_set_prereq INTERACTIVE
 :
 
 # vi: set ts=4 sw=4 noet :
+
+
+diffStrings () {
+    git diff $(echo "$1" | git hash-object -w --stdin) $(echo "$2" | git hash-object -w --stdin)  --word-diff
+
+}
+
+test_expect_same() {
+    test "$2" = "$3"
+    isEqual=$?
+    test_expect_success "$1" "
+        test $isEqual = 0
+    "
+
+    [[ $isEqual -ne 0 ]] && {
+        diffStrings "$2" "$3"
+    }
+
+}
+
+
