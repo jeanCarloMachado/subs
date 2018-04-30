@@ -6,6 +6,11 @@ test_expect_same() {
     test_expect_success "$1" "
         test $isEqual = 0
     "
+
+    [[ $isEqual -ne 0 ]] && {
+        runFunction diffStrings "$2" "$3"
+    }
+
 }
 
 test_description="Basic features"
@@ -42,7 +47,7 @@ result=$(subs <<< 'cl dog
 
 test_expect_same "complex nested" "$result" 'class dog\n{\n  public function __constructor($color)\n  {\n  \n  }
   public function bite (person)\n  {\n          $person->isHurt();\n  }
-  public function bark (people)\n  {\n      foreach ($people as $person) {\n            if(person->isbad()) {\n                            $this->bark()\n            }\n      }\n  }\n}' ;
+  public function bark (people)\n  {\n      foreach ($people as $person) {\n          if(person->isbad()) {\n                      $this->bark()\n      }\n    }\n  }\n}' ;
 
 
 test_done
