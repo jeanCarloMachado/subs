@@ -17,12 +17,7 @@ test_description="Basic features"
 
 . sharness.sh
 
-result=$(echo 'myMail' | subs)
-
-myMail
-test_expect_success "email" "
-    test $result = myMail@gmail.com
-"
+test_expect_same "same email" "$(echo 'myMail' | subs)" "myMail@gmail.com"
 
 test_expect_same "replaces complex line" "$(echo 'af a' | subs)" 'function ($a)\n{\n\n}'
 
@@ -30,10 +25,7 @@ test_expect_same "replaces partial arguments keep rest empty" "$(echo 'pf a' | s
 
 test_expect_same "substitute variable" "$(echo 'cl Car' | subs)" 'class Car\n{\n\n}'
 
-result=$(subs <<< 'cl Car
- pf turnOn')
-
-test_expect_same "nested" "$result" 'class Car\n{\n public function turnOn ()\n {\n \n }\n}' ;
+test_expect_same "nested" "$(printf "cl Car\n pf turnOn" | subs)" 'class Car\n{\n public function turnOn ()\n {\n \n }\n}' ;
 
 
 result=$(subs <<< 'cl dog
