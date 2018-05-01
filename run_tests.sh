@@ -5,4 +5,9 @@ export SUBS_CONFIG=$(pwd)/default.ini
 
 export PATH="$(pwd)/test:$PATH"
 
-./test/basic.sh
+IFS='
+'
+for i in $(ls ./test/t*.sh)
+do
+  $i
+done
