@@ -14,7 +14,7 @@ cl dog
         $person->injuried = true;
     pf bark $people
         fe people person
-            if person->isbad()
+            if $person->isbad()
                 $this->bark()
 ```
 
@@ -35,7 +35,7 @@ class dog
     public function bark ($people)
     {
           foreach ($people as $person) {
-                if(person->isbad()) {
+                if($person->isbad()) {
                       $this->bark()
             }
         }
@@ -45,7 +45,7 @@ class dog
 ```
 
 
-Given this configuration on the file ~/subsconfig.ini:
+Given this configuration on the file ~/.subsconfig.ini:
 
 ```ini
 [global]
