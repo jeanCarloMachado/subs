@@ -58,11 +58,15 @@ Given this configuration on the file ~/subsconfig.ini:
 
 ```ini
 [global]
-pf=public function %s (%s)\n{\n%c\n}
-co=public function __constructor($%s)\n{\n%c\n}
+pf=public function %s ($%s)\n{\n%c\n}
+af=function ($%s)\n{\n%c\n}
+co=public function __constructor($%1)\n{\n$this->%1 = $%1;\n%c\n}
 cl=class %s\n{\n%c\n}
 fe=foreach ($%s as $%s) {\n%c\n}
 if=if(%s) {\n%c\n}
+pi=private $%s;
+si=$this->%s = %s;
+po=protected $%s;
 ```
 
 ## Installation:
