@@ -9,43 +9,52 @@ The given code:
 
 ```
 cl dog
+    pi bark;
+    pi color;
     co color
-    pf bite $person
+      si bark false
+    pf bite person
         $person->injuried = true;
-    pf bark $people
+    pf bark people
         fe people person
-            if $person->isbad()
-                $this->bark()
+            if person->isbad()
+                si bark true
+    set color
 ```
 
 Produces:
 
 ```php
-
 class dog
 {
+    private $bark;
+    private $color;
     public function __constructor($color)
     {
-
+        $this->color = $color;
+        $this->bark = false;
     }
-    public function bite ($person)
+    public function bite($person)
     {
-          $person->injuried = true;
+        $person->injuried = true;
     }
-    public function bark ($people)
+    public function bark($people)
     {
-          foreach ($people as $person) {
-                if($person->isbad()) {
-                      $this->bark()
+        foreach ($people as $person) {
+            if ($person->isbad()) {
+                $this->bark = true;
             }
         }
     }
+    public function setcolor($color)
+    {
+        $this->color = $color;
+    }
 }
-
 ```
 
 
-Given this configuration on the file ~/.subsconfig.ini:
+Given this configuration on the file ~/subsconfig.ini:
 
 ```ini
 [global]

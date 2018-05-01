@@ -23,6 +23,7 @@ data Node = Node
   , identation :: Int
   } deriving (Show)
 
+type MatchSnippet = String
 type Ast = [Node]
 
 main :: IO ()
@@ -88,32 +89,52 @@ node2Str node =
     Nothing       -> proc $ literal node
     Just matchStr -> proc $ processArguments matchStr $ arguments node
   where
-    proc = (\x -> addChild (addIdentation node x) $ ast2String $ children node )
+    proc = (\x -> replaceChildren (addIdentation node x) $ ast2String $ children node )
     currentMatch = match node
 
-addChild :: String -> String -> String
-addChild parent ""       = replace "%c" "" parent
-addChild parent children = replace "%c" children parent
+processArguments :: String -> [String] -> String
+processArguments matchSnippet arguments =
+  if hasNumericArguments matchSnippet
+  then processNumericArguments matchSnippet arguments
+  else processPositionalArguments matchSnippet arguments
 
+
+hasNumericArguments :: MatchSnippet -> Bool
+hasNumericArguments match =
+  case occurence of
+    Nothing -> False
+    Just x -> True
+
+  where
+  occurence = substringP "%1" match
+
+processNumericArguments :: MatchSnippet -> [String] -> String
+processNumericArguments matchSnippet arguments = replace "%1" (argHead arguments) matchSnippet
+
+processPositionalArguments :: MatchSnippet -> [String] -> String
+processPositionalArguments matchSnippet arguments =
+  case idx of
+    Just x -> recurse $ replace "%s" aHead (fst pair)
+      where pair = splitAt' (x + 2) matchSnippet
+            recurse = \x -> processPositionalArguments (x  ++ (snd pair)) aTail
+    Nothing -> matchSnippet
+  where
+    idx = substringP "%s" matchSnippet --first occurence of %s
+    aHead = argHead arguments
+    aTail = argTail arguments
+
+
+replaceChildren :: String -> String -> String
+replaceChildren parent ""       = replace "%c" "" parent
+replaceChildren parent children = replace "%c" children parent
 
 addIdentation :: Node -> String -> String
 addIdentation node str =
   replace "\\n" ("\\n" ++ spaces) (spaces ++ str)
   where
-   spaces = replicate (identation node) ' '
+   spaces =  identation node `replicate` ' '
 
 
-processArguments :: String -> [String] -> String
-processArguments match arguments =
-  case idx of
-    Just x -> processArguments (replaced ++ (snd pair)) aTail
-      where pair = splitAt' (x + 2) match
-            replaced = replace "%s" aHead (fst pair)
-    Nothing -> match
-  where
-    idx = substringP "%s" match
-    aHead = argHead arguments
-    aTail = argTail arguments
 
 argTail arguments =
   if len > 1
