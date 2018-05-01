@@ -32,7 +32,7 @@ main = do
   iniFile <- readIniFile configFile
   case iniFile of
     Left error -> putStr error
-    Right ini  -> putStr (processAll ini (lines input))
+    Right ini  -> putStr $ processAll ini $ lines input
 
 getConfigPath = do
   env <- lookupEnv "SUBS_CONFIG"
@@ -50,30 +50,45 @@ buildAst ini input = map (string2Node ini) sameLevel
   where
     sameLevel = getSiblingsWithNestedChildren (head input) input
 
+
+getSiblingsWithNestedChildren :: String -> [String] -> [[String]]
+getSiblingsWithNestedChildren entry entries =
+  [] ++
+  (map
+     (\indice -> getChildren entry $ snd $ splitAt' indice entries)
+     parentsIndices)
+  where
+    parents = filter (hasSameIdentationLevel entry) entries
+    parentsIndicesMaybe = map (\x -> elemIndex x entries) parents
+    parentsIndices = catMaybes parentsIndicesMaybe
+
+
+
 string2Node :: Ini -> [String] -> Node
 string2Node ini literal =
   Node
   { match = getIniMatch ini function
   , function = function
-  , arguments = (tail values)
+  , arguments = tail values
   , literal = literalLine
-  , children = buildAst ini (tail literal)
-  , identation = length (takeWhile isSpace literalLine)
+  , children = buildAst ini $ tail literal
+  , identation = length $ takeWhile isSpace literalLine
   }
   where
-    function = head (values)
-    values = separateBy ' ' (dropWhile isSpace literalLine)
-    literalLine = (head literal)
+    function = head values
+    values = separateBy ' '  $ dropWhile isSpace literalLine
+    literalLine = head literal
 
 ast2String :: Ast -> String
-ast2String ast = intercalate "\n" (map node2Str ast)
+ast2String ast = intercalate "\n" $ map node2Str ast
 
 node2Str :: Node -> String
 node2Str node =
   case currentMatch of
-    Nothing       -> addChild (addIdentation node (literal node)) (ast2String (children node))
-    Just matchStr -> addChild (addIdentation node (processArguments matchStr (arguments node)) )  (ast2String (children node))
+    Nothing       -> proc $ literal node
+    Just matchStr -> proc $ processArguments matchStr $ arguments node
   where
+    proc = (\x -> addChild (addIdentation node x) $ ast2String $ children node )
     currentMatch = match node
 
 addChild :: String -> String -> String
@@ -114,17 +129,6 @@ argHead arguments =
   where
     len = (length arguments)
 
-getSiblingsWithNestedChildren :: String -> [String] -> [[String]]
-getSiblingsWithNestedChildren entry entries =
-  [] ++
-  (map
-     (\indice -> getChildren entry (snd (splitAt' indice entries)))
-     parentsIndices)
-  where
-    parents = filter (hasSameIdentationLevel entry) entries
-    parentsIndicesMaybe = map (\x -> elemIndex x entries) parents
-    parentsIndices = catMaybes parentsIndicesMaybe
-
 getChildren :: String -> [String] -> [String]
 getChildren ref entries =
   [head entries] ++
@@ -136,8 +140,8 @@ hasSameIdentationLevel current next =
     then True
     else False
   where
-    identationInCurrent = length (takeWhile isSpace current)
-    identationInNext = length (takeWhile isSpace next)
+    identationInCurrent = length $ takeWhile isSpace current
+    identationInNext = length $ takeWhile isSpace next
 
 
 
@@ -153,6 +157,7 @@ separateBy chr = unfoldr sep
   where
     sep [] = Nothing
     sep l  = Just . fmap (drop 1) . break (== chr) $ l
+
 
 splitAt' = \n -> \xs -> (take n xs, drop n xs)
 
