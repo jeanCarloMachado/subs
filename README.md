@@ -9,36 +9,39 @@ The given code:
 
 ```
 cl dog
-  co color
-  pf bite person
-  pf bark people
-    fe people person
-      if person->isbad()
-        $this->bark()
+    co color
+    pf bite $person
+        $person->injuried = true;
+    pf bark $people
+        fe people person
+            if person->isbad()
+                $this->bark()
 ```
 
 Produces:
 
 ```php
+
 class dog
 {
-  public function __constructor($color)
-  {
-  
-  }
-  public function bite (person)
-  {
-  
-  }
-  public function bark (people)
-  {
-      foreach ($people as $person) {
-            if(person->isbad()) {
-                            $this->bark()
+    public function __constructor($color)
+    {
+
+    }
+    public function bite ($person)
+    {
+          $person->injuried = true;
+    }
+    public function bark ($people)
+    {
+          foreach ($people as $person) {
+                if(person->isbad()) {
+                      $this->bark()
             }
-      }
-  }
+        }
+    }
 }
+
 ```
 
 
