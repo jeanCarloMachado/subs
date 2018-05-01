@@ -8,7 +8,7 @@ import           Data.List
 import           Data.List.Split    (splitPlaces)
 import           Data.Maybe         (catMaybes)
 import           Data.String.Utils
-import           Data.Text          (pack, splitOn, unpack)
+import           Data.Text          (Text, pack, splitOn, unpack)
 import           Data.Typeable
 
 data Node = Node
@@ -22,22 +22,23 @@ data Node = Node
 
 type MatchSnippet = String
 type Ast = [Node]
+type IniCfg = (Ini, [Text])
 
 -- BUILD AST
 
-build :: Ini -> [String] -> Ast
-build ini input = map (string2Node ini) sameLevel
+build :: IniCfg -> [String] -> Ast
+build inicfg input = map (string2Node inicfg) sameLevel
   where
     sameLevel = getSiblingsWithNestedChildren (head input) input
 
-string2Node :: Ini -> [String] -> Node
-string2Node ini literal =
+string2Node :: IniCfg -> [String] -> Node
+string2Node inicfg literal =
   Node
-  { match = getIniMatch ini function
+  { match = getIniMatch (fst inicfg) (snd inicfg) function
   , function = function
   , arguments = tail values
   , literal = literalLine
-  , children = build ini $ tail literal
+  , children = build inicfg $ tail literal
   , identation = length $ takeWhile isSpace literalLine
   }
   where
@@ -56,13 +57,14 @@ getSiblingsWithNestedChildren entry entries =
     parentsIndicesMaybe = map (\x -> elemIndex x entries) parents
     parentsIndices = catMaybes parentsIndicesMaybe
 
-getIniMatch ini value =
+
+getIniMatch ini [] value =  Nothing
+getIniMatch ini sections value =
   case either of
-    Left msg   -> Nothing
+    Left msg   -> getIniMatch ini (tail sections) value
     Right text -> Just (unpack text)
   where
-    either = lookupValue (pack "global") (pack value) ini
-
+    either = lookupValue (head sections) (pack value) ini
 
 -- PRINT AST
 ast2String :: Ast -> String
