@@ -9,8 +9,8 @@ The given code:
 
 ```
 cl dog
-    pi bark;
-    pi color;
+    pi bark
+    pi color
     co color
       si bark false
     pf bite person
