@@ -72,7 +72,7 @@ po=protected $%s;
 ## Installation:
 
 ```sh
-sudo wget -O /usr/local/bin/subs "https://www.dropbox.com/s/l3i53osfrrs5mhr/subs" && chmod +x /usr/local/bin/subs
+sudo wget -O /usr/local/bin/subs "https://www.dropbox.com/s/l3i53osfrrs5mhr/subs" && sudo chmod +x /usr/local/bin/subs
 ```
 
 
