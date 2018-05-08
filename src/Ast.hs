@@ -67,8 +67,11 @@ getIniMatch ini sections value =
     either = lookupValue (head sections) (pack value) ini
 
 -- PRINT AST
+
 ast2String :: Ast -> String
-ast2String ast = intercalate "\n" $ map node2Str ast
+ast2String ast = unlines $ splitStr "\\n" $ iast2string ast
+
+iast2string ast = intercalate "\\n" $ map node2Str ast
 
 node2Str :: Node -> String
 node2Str node =
@@ -76,7 +79,7 @@ node2Str node =
     Nothing       -> proc $ literal node
     Just matchStr -> proc $ processArguments matchStr $ arguments node
   where
-    proc = (\x -> replaceChildren (addIdentation node x) $ ast2String $ children node )
+    proc = (\x -> replaceChildren (addIdentation node x) $ iast2string $ children node )
     currentMatch = match node
 
 processArguments :: String -> [String] -> String
@@ -123,18 +126,15 @@ addIdentation node str =
 
 
 argTail arguments =
-  if len > 1
-    then tail arguments
-    else []
-  where
-    len = (length arguments)
+  conditionalVal ((length arguments) > 1) (tail arguments) []
 
 argHead arguments =
-  if len > 0
-    then head arguments
-    else ""
-  where
-    len = (length arguments)
+  conditionalVal ((length arguments) > 0) (head arguments) ""
+
+conditionalVal predicate trueVal falseVal =
+  if predicate
+  then trueVal
+  else falseVal
 
 getChildren :: String -> [String] -> [String]
 getChildren ref entries =
@@ -156,6 +156,15 @@ separateBy chr = unfoldr sep
   where
     sep [] = Nothing
     sep l  = Just . fmap (drop 1) . break (== chr) $ l
+
+
+splitStr :: Eq a => [a] -> [a] -> [[a]]
+splitStr sub str = split' sub str [] []
+    where
+    split' _   []  subacc acc = reverse (reverse subacc:acc)
+    split' sub str subacc acc
+        | sub `isPrefixOf` str = split' sub (drop (length sub) str) [] (reverse subacc:acc)
+        | otherwise            = split' sub (tail str) (head str:subacc) acc
 
 
 splitAt' = \n -> \xs -> (take n xs, drop n xs)

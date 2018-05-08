@@ -44,7 +44,7 @@ run = do
   inputStr <- getContents
   ini <- parseConfig
   let inputLines = sanitizeInput $ Data.List.lines inputStr
-  putStr $ ast2String $ Ast.build (ini, sections ini) inputLines
+  putStr $  ast2String $ Ast.build (ini, sections ini) inputLines
 
 
 sanitizeInput :: [String] -> [String]
