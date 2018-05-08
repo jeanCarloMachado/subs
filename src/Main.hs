@@ -11,10 +11,17 @@ import           Data.String.Utils
 
 exit    = exitWith ExitSuccess
 
+helpStr = "Subs - more than snippets, less than a transpiler\n\
+\    Usage:\n\
+\    \n\
+\    subs <<< 'snippet'                 parse the snippet\n\
+\    subs -v                            get version\n\
+\    subs -k                            get all keys on the ini file"
+
 main = do
      args <- getArgs
      case args of
-        ["-h"] -> putStr "Subs - more than snippets, less than a transpiler" >> exit
+        ["-h"] -> putStr helpStr  >> exit
         ["-v"] -> putStr "Subs - Version 0.1" >> exit
         ["-k"] -> showKeys >> exit
         otherwise -> run
@@ -34,9 +41,15 @@ op acc x =
       Right y -> acc ++ y
 
 run = do
-  input <- getContents
+  inputStr <- getContents
   ini <- parseConfig
-  putStr $ ast2String $ Ast.build (ini, sections ini) $ Data.List.lines input
+  let inputLines = sanitizeInput $ Data.List.lines inputStr
+  putStr $ ast2String $ Ast.build (ini, sections ini) inputLines
+
+
+sanitizeInput :: [String] -> [String]
+sanitizeInput inputLines =
+  filter (\x -> (length x) > 0) inputLines
 
 
 getConfigPath = do
