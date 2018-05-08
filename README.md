@@ -54,7 +54,7 @@ class dog
 ```
 
 
-Given this configuration on the file ~/subsconfig.ini:
+Given this configuration on the file `~/.subsconfig.ini`:
 
 ```ini
 [global]
@@ -90,9 +90,12 @@ class Gandalf
 ```
 
 
-## Integration
+## Integrations
 
-The true power of subs comes when you integrate it on your text editor.
+The true power of subs comes when you integrate it with your tools.
+
+
+### Vim
 
 For vim, using Tim Pope's textobject integration is simply a matter of:
 
@@ -105,3 +108,36 @@ endfunc
 call MapAction('Subs', '<leader>y')
 ```
 
+### Zsh
+
+
+```sh
+# in your .zshrc
+evaluate-snippets-selection () {
+    if [[ $CURSOR -gt $MARK ]]; then
+        start=$MARK
+        end=$(( CURSOR + 1 ))
+    else
+        start=$(( CURSOR + 1 ))
+        end=$MARK
+    fi
+    BUFFER="$BUFFER[0,start]$(subs <<< $BUFFER[start+1,end])$BUFFER[end+1,-1]"
+}
+zle -N evaluate-snippets-selection
+bindkey '^O' evaluate-snippets-selection
+```
+
+
+### Dmenu
+
+```sh
+#!/bin/bash
+# file dmenuSnippets.sh
+key=$( subs -k | rofi -levenshtein-sort -dmenu -p "snippet: ")
+echo $key
+value=$( echo "$key" | subs )
+
+echo "$value"
+mycopy "$value"
+notify-send "Copied"
+```
