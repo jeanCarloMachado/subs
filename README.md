@@ -82,7 +82,10 @@ After having your config just pipe the text to stdin.
 
 ```sh
 subs <<< 'cl Gandalf'
-class Gandalf\n{\n\n}
+class Gandalf
+{
+
+}
 ```
 
 
@@ -95,7 +98,7 @@ For vim, using Tim Pope's textobject integration is simply a matter of:
 ```vimscript
 fun! s:Subs(str)
   let my_filetype = &filetype
-  let out = ChompedSystemCall('runFunction subsEval', a:str."\n")
+  let out = ChompedSystemCall('subs -p '.my_filetype, a:str."\n")
   return out
 endfunc
 call MapAction('Subs', '<leader>y')
