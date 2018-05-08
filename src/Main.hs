@@ -21,13 +21,24 @@ helpStr = "Subs - more than snippets, less than a transpiler\n\
 
 main = do
      args <- getArgs
-     let firstArg = head args
+     let firstArg = Ast.conditionalVal ((length args) > 0) (head args) ""
      case firstArg of
         "-h" -> putStr helpStr  >> exit
         "-v" -> putStr "Subs - Version 0.1" >> exit
         "-k" -> showKeys >> exit
         "-p" -> run (last args)
-        otherwise -> run ""
+        _ -> run "global"
+
+
+
+run :: String -> IO()
+run preferedFiletype = do
+  inputStr <- getContents
+  ini <- parseConfig
+  let inputLines = sanitizeInput $ Data.List.lines inputStr
+      iniSections = sections ini
+  putStr $  ast2String $ Ast.build (ini, (pack preferedFiletype) : iniSections) inputLines
+
 
 showKeys = do
   ini <- parseConfig
@@ -37,21 +48,10 @@ showKeys = do
       stringList = map unpack textList
   putStr $ intercalate "\n" stringList
 
-
 appendRight acc x =
   case x of
       Left _ -> acc
       Right y -> acc ++ y
-
-run preferedFiletype = do
-  inputStr <- getContents
-  ini <- parseConfig
-  let inputLines = sanitizeInput $ Data.List.lines inputStr
-      iniSections = sections ini
-  if preferedFiletype == ""
-  then putStr $  ast2String $ Ast.build (ini, iniSections) inputLines
-  else putStr $  ast2String $ Ast.build (ini, (pack preferedFiletype) : iniSections) inputLines
-
 
 sanitizeInput :: [String] -> [String]
 sanitizeInput inputLines =
