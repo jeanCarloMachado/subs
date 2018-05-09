@@ -23,6 +23,8 @@ subsCompare "selects php when type is passed" "cl foo" "class foo {}" -p 'php'
 
 subsCompare "selects javascript when type is passed " "cl foo" "var foo = class {}" -p 'javascript'
 
+subsCompare "not in section but in file" "myMail" "myMail@gmail.com" -p 'javascript'
+
 test_done
 
 
