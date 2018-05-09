@@ -8,5 +8,5 @@ IFS='
 '
 for i in $(ls ./test/t*.sh)
 do
-  $i
+  $i || exit 1
 done
