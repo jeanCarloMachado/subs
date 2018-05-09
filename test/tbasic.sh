@@ -44,7 +44,6 @@ test_expect_same "remove previous empty spaces" "$(printf "\n\npf a" | subs)" \
 
 
 
-
 test_done
 
 
