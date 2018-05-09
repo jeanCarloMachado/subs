@@ -1,5 +1,10 @@
 language: bash
 
+# Caching so the next build will be fast too.
+cache:
+  directories:
+  - $HOME/.stack
+
 before_script:
     - wget "https://github.com/chriscool/sharness/archive/master.zip" && unzip master.zip && sudo mv sharness-master/* /usr/local/bin
     - mkdir -p ~/.local/bin
@@ -7,4 +12,6 @@ before_script:
     - travis_retry curl -L https://get.haskellstack.org/stable/linux-x86_64.tar.gz | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
 
 script:
+    - stack install 
+    - stack build
     - bash ./run_tests.sh
