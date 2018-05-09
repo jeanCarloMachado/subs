@@ -6,21 +6,23 @@ test_description="Nesting"
 . sharness.sh
 
 
-# test_expect_same "nested" "$(printf "cl Car\n pf turnOn" | subs)" 'class Car\n{\n public function turnOn ()\n {\n \n }\n}' ;
+export SUBS_CONFIG=/tmp/test-nesting.ini
+cat > $SUBS_CONFIG <<EOF
+[global]
+pf=public function %s (%s)\n{\n\n}
+cl=class %s\n{\n%c\n}
+EOF
 
-
-# result=$(echo 'cl dog
-#   co color
-#   pf bite person
-#     $person->isHurt();
-#   pf bark people
-#     fe people person
-#       if person->isbad()
-#         $this->bark()' | subs)
-
-# test_expect_same "complex nested" "$result" 'class dog\n{\n  public function __constructor($color)\n  {\n  $this->color = $color;\n  \n  }
-#   public function bite (person)\n  {\n          $person->isHurt();\n  }
-#   public function bark (people)\n  {\n      foreach ($people as $person) {\n          if(person->isbad()) {\n                      $this->bark()\n      }\n    }\n  }\n}';
+input="cl Car
+ pf turnOn"
+test_expect_same "nested" "$(subs <<< $input)" \
+'class Car
+{
+ public function turnOn ()
+ {
+ 
+ }
+}'
 
 
 test_done

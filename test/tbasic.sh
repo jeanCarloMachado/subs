@@ -6,12 +6,15 @@ test_description="Basic features"
 
 . sharness.sh
 
-echo '[global]
+
+export SUBS_CONFIG=/tmp/test-basic.ini
+cat > $SUBS_CONFIG <<EOF
+[global]
 myMail=myMail@gmail.com
 fn=function ($%s){\n\n}
-' > /tmp/config.ini
-
-export SUBS_CONFIG=/tmp/config.ini
+pf=public function %s (%s)\n{\n\n}
+cl=class %s\n{\n\n}
+EOF
 
 
 test_expect_same "same email" "$(echo 'myMail' | subs)" "myMail@gmail.com"
@@ -21,9 +24,25 @@ test_expect_same "replaces multiline line" "$(echo 'fn a' | subs)" \
 
 }'
 
-# test_expect_same "replaces partial arguments keep rest empty" "$(echo 'pf a' | subs)" 'public function a ()\n{\n\n}'
+test_expect_same "substitute variable" "$(echo 'cl Car' | subs)" \
+'class Car
+{
 
-# test_expect_same "substitute variable" "$(echo 'cl Car' | subs)" 'class Car\n{\n\n}'
+}'
+
+test_expect_same "replaces partial arguments keep rest empty" "$(echo 'pf a' | subs)" \
+'public function a ()
+{
+
+}'
+
+test_expect_same "remove previous empty spaces" "$(printf "\n\npf a" | subs)" \
+'public function a ()
+{
+
+}'
+
+
 
 
 test_done
