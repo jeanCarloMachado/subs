@@ -25,5 +25,26 @@ subsCompare "simple nesting" "cl Car
  }
 }'
 
+subsCompare "keep indention 4 spaces" "cl Car
+    pf turnOn" \
+'class Car
+{
+    public function turnOn ()
+    {
+    
+    }
+}'
+
+subsCompare "same identation as sibling" "cl Car
+pf turnOn" \
+'class Car
+{
+
+}
+public function turnOn ()
+{
+
+}'
+
 
 test_done
