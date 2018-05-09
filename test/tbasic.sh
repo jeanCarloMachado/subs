@@ -17,26 +17,29 @@ cl=class %s\n{\n\n}
 EOF
 
 
-test_expect_same "same email" "$(echo 'myMail' | subs)" "myMail@gmail.com"
+subsCompare "same email" "myMail" "myMail@gmail.com"
 
-test_expect_same "replaces multiline line" "$(echo 'fn a' | subs)" \
+subsCompare "replaces multiline line" "fn a" \
 'function ($a){
 
 }'
 
-test_expect_same "substitute variable" "$(echo 'cl Car' | subs)" \
+subsCompare "substitute variable" "cl Car" \
 'class Car
 {
 
 }'
 
-test_expect_same "replaces partial arguments keep rest empty" "$(echo 'pf a' | subs)" \
+subsCompare "replaces partial arguments keep rest empty" "pf a" \
 'public function a ()
 {
 
 }'
 
-test_expect_same "remove previous empty spaces" "$(printf "\n\npf a" | subs)" \
+subsCompare "remove previous empty spaces" \
+'
+
+pf a' \
 'public function a ()
 {
 

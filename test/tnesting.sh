@@ -13,9 +13,10 @@ pf=public function %s (%s)\n{\n\n}
 cl=class %s\n{\n%c\n}
 EOF
 
-input="cl Car
- pf turnOn"
-test_expect_same "nested" "$(subs <<< $input)" \
+
+
+subsCompare "simple nesting" "cl Car
+ pf turnOn" \
 'class Car
 {
  public function turnOn ()

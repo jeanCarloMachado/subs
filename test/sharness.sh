@@ -899,4 +899,12 @@ test_expect_same() {
 
 }
 
+subsCompare() {
+    description=$1
+    input=$2
+    expected=$3
+    shift 3
+    result=$(echo "$input" | subs "$@")
+    test_expect_same "$description" "$result" "$expected"
+}
 

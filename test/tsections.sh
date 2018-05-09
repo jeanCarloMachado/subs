@@ -13,7 +13,7 @@ myMail=myMail@gmail.com
 EOF
 
 
-test_expect_same "random section name" "$(echo 'myMail' | subs)" "myMail@gmail.com"
+subsCompare "random section name" "myMail" "myMail@gmail.com"
 
 
 test_done
