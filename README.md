@@ -2,6 +2,8 @@
 
 This project aims to reduce the amount of things we type.
 
+![build status](https://travis-ci.org/jeanCarloMachado/subs.svg?branch=master)
+
 
 ## Examples:
 The given code:
