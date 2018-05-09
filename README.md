@@ -52,28 +52,20 @@ class dog
 }
 ```
 
+Given the default config. file.
 
-Given this configuration on the file `~/.subsconfig.ini`:
-
-```ini
-[global]
-pf=public function %s ($%s)\n{\n%c\n}
-af=function ($%s)\n{\n%c\n}
-co=public function __constructor($%1)\n{\n$this->%1 = $%1;\n%c\n}
-cl=class %s\n{\n%c\n}
-fe=foreach ($%s as $%s) {\n%c\n}
-if=if(%s) {\n%c\n}
-pi=private $%s;
-si=$this->%s = %s;
-po=protected $%s;
-```
 
 ## Installation (Linux only):
 
 ```sh
 sudo wget -O /usr/local/bin/subs "http://jeancarlomachado.net/subs" \
 && sudo chmod +x /usr/local/bin/subs
+
 ```
+
+Create/copy the config file  into `~/.subsconfig.ini`. [This file](https://raw.githubusercontent.com/jeanCarloMachado/subs/master/EXAMPLE.subsconfig.ini) is the default
+one.
+
 
 
 ## Usage
