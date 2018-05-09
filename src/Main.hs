@@ -1,17 +1,17 @@
 module Main where
 
-import           Data.List
-import           Data.Ini (lookupValue, sections, keys, readIniFile)
-import           System.Environment
 import           Ast
-import           Data.Text (unpack, pack)
-import System.Exit
+import           Data.Ini           (keys, lookupValue, readIniFile, sections)
+import           Data.List
 import           Data.String.Utils
+import           Data.Text          (pack, unpack)
+import           System.Environment
+import           System.Exit
 
+exit = exitWith ExitSuccess
 
-exit    = exitWith ExitSuccess
-
-helpStr = "Subs - more than snippets, less than a transpiler\n\
+helpStr =
+  "Subs - more than snippets, less than a transpiler\n\
 \    Usage:\n\
 \    \n\
 \    subs <<< 'snippet'                 parse the snippet\n\
@@ -20,25 +20,24 @@ helpStr = "Subs - more than snippets, less than a transpiler\n\
 \    subs -k                            get all keys on the ini file"
 
 main = do
-     args <- getArgs
-     let firstArg = Ast.conditionalVal ((length args) > 0) (head args) ""
-     case firstArg of
-        "-h" -> putStr helpStr  >> exit
-        "-v" -> putStr "Subs - Version 0.1" >> exit
-        "-k" -> showKeys >> exit
-        "-p" -> run (last args)
-        _ -> run "global"
+  args <- getArgs
+  let firstArg = Ast.conditionalVal ((length args) > 0) (head args) ""
+  case firstArg of
+    "-h" -> putStr helpStr >> exit
+    "-v" -> putStr "Subs - Version 0.1" >> exit
+    "-k" -> showKeys >> exit
+    "-p" -> run (last args)
+    _    -> run "global"
 
-
-
-run :: String -> IO()
+run :: String -> IO ()
 run preferedFiletype = do
   inputStr <- getContents
   ini <- parseConfig
   let inputLines = sanitizeInput $ Data.List.lines inputStr
       iniSections = sections ini
-  putStr $  ast2String $ Ast.build (ini, (pack preferedFiletype) : iniSections) inputLines
-
+  putStr $
+    ast2String $
+    Ast.build (ini, (pack preferedFiletype) : iniSections) inputLines
 
 showKeys = do
   ini <- parseConfig
@@ -50,13 +49,11 @@ showKeys = do
 
 appendRight acc x =
   case x of
-      Left _ -> acc
-      Right y -> acc ++ y
+    Left _  -> acc
+    Right y -> acc ++ y
 
 sanitizeInput :: [String] -> [String]
-sanitizeInput inputLines =
-  filter (\x -> (length x) > 0) inputLines
-
+sanitizeInput inputLines = filter (\x -> (length x) > 0) inputLines
 
 getConfigPath = do
   env <- lookupEnv "SUBS_CONFIG"
