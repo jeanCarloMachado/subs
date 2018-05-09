@@ -1,3 +1,4 @@
+#!/bin/bash
 
 test_description="numeric positioning"
 
