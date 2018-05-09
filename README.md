@@ -4,7 +4,6 @@ This project aims to reduce the amount of things we type.
 
 
 ## Examples:
-
 The given code:
 
 ```
@@ -72,7 +71,7 @@ po=protected $%s;
 ## Installation (Linux only):
 
 ```sh
-sudo wget -O /usr/local/bin/subs "https://www.dropbox.com/s/l3i53osfrrs5mhr/subs" \
+sudo wget -O /usr/local/bin/subs "http://jeancarlomachado.net/subs" \
 && sudo chmod +x /usr/local/bin/subs
 ```
 

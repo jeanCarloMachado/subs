@@ -13,5 +13,5 @@ test: compile
 	./run_tests.sh
 
 deploy:
-	upload_and_share /home/jean/Dropbox/subs
+	aws s3 cp /home/jean/Dropbox/subs s3://jeancarlomachado.site/subs
 
