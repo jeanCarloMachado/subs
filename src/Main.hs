@@ -1,6 +1,7 @@
 module Main where
 
 import           Ast
+import           AstPrinter
 import           Data.Ini           (keys, lookupValue, readIniFile, sections)
 import           Data.List
 import           Data.String.Utils
@@ -21,7 +22,7 @@ helpStr =
 
 main = do
   args <- getArgs
-  let firstArg = Ast.conditionalVal ((length args) > 0) (head args) ""
+  let firstArg = AstPrinter.conditionalVal ((length args) > 0) (head args) ""
   case firstArg of
     "-h" -> putStr helpStr >> exit
     "-v" -> putStr "Subs - Version 0.1" >> exit
@@ -36,7 +37,7 @@ run preferedFiletype = do
   let inputLines = sanitizeInput $ Data.List.lines inputStr
       iniSections = sections ini
   putStr $
-    ast2String $
+    AstPrinter.ast2String $
     Ast.build (ini, (pack preferedFiletype) : iniSections) inputLines
 
 
