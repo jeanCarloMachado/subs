@@ -82,24 +82,26 @@ node2Str node =
     proc = (\x -> replaceChildren (addIdentation node x) $ iast2string $ children node )
     currentMatch = match node
 
-processArguments :: String -> [String] -> String
+processArguments :: MatchSnippet -> [String] -> String
 processArguments matchSnippet arguments =
-  if hasNumericArguments matchSnippet
-  then processNumericArguments matchSnippet arguments
-  else processPositionalArguments matchSnippet arguments
-
-
-hasNumericArguments :: MatchSnippet -> Bool
-hasNumericArguments match =
-  case occurence of
-    Nothing -> False
-    Just x -> True
-
+  processPositionalArguments numericArgumentsProcessed arguments
   where
-  occurence = substringP "%1" match
+  numericArgumentsProcessed = processNumericArguments matchSnippet arguments 
+
+
 
 processNumericArguments :: MatchSnippet -> [String] -> String
-processNumericArguments matchSnippet arguments = replace "%1" (argHead arguments) matchSnippet
+processNumericArguments matchSnippet arguments = recursiveRelaceNumeric arguments matchSnippet 1
+
+recursiveRelaceNumeric arguments matchSnippet argumentIndice =
+  if argumentIndice < argsLen
+  then recursiveRelaceNumeric arguments result $ argumentIndice + 1
+  else result
+  where
+    argsLen = length (arguments)
+    currentArgument = arguments !! (argumentIndice -1 )
+    result = replace ("%" ++ (show argumentIndice)) currentArgument matchSnippet
+
 
 processPositionalArguments :: MatchSnippet -> [String] -> String
 processPositionalArguments matchSnippet arguments =
