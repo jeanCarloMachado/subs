@@ -23,13 +23,15 @@ data Node = Node
 type MatchSnippet = String
 type Ast = [Node]
 type Config = (Ini, [Text])
+type Arguments = [String]
+type Input = [String]
 
-build :: Config -> [String] -> Ast
+build :: Config -> Input -> Ast
 build inicfg input = map (string2Node inicfg) sameLevel
   where
     sameLevel = siblingsWithChildren (head input) input
 
-string2Node :: Config -> [String] -> Node
+string2Node :: Config -> Input -> Node
 string2Node inicfg literal =
   Node
   { match = getIniMatch (fst inicfg) (snd inicfg) function
@@ -60,7 +62,7 @@ getIniMatch ini [] value =  Nothing
 getIniMatch ini sections value =
   case either of
     Left msg   -> getIniMatch ini (tail sections) value
-    Right text -> Just (unpack text)
+    Right text -> Just $ myUnlines $ splitStr "\\n" $ unpack text
   where
     either = lookupValue (head sections) (pack value) ini
 
@@ -86,3 +88,17 @@ hasSameIdentationLevel current next =
     identationInNext = length $ takeWhile isSpace next
 
 splitAt' = \n -> \xs -> (take n xs, drop n xs)
+
+
+
+splitStr :: Eq a => [a] -> [a] -> [[a]]
+splitStr sub str = split' sub str [] []
+    where
+    split' _   []  subacc acc = reverse (reverse subacc:acc)
+    split' sub str subacc acc
+        | sub `isPrefixOf` str = split' sub (drop (length sub) str) [] (reverse subacc:acc)
+        | otherwise            = split' sub (tail str) (head str:subacc) acc
+
+
+myUnlines [] = ""
+myUnlines x = (init . unlines) x
