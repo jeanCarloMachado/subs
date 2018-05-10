@@ -9,18 +9,18 @@ This project aims to reduce the amount of things we type.
 The given code:
 
 ```
-cl dog
-    pi bark
-    pi color
+cl Dog
     co color
-      si bark false
-    pf bite person
-        $person->injuried = true;
+      as bark false
     pf bark people
         fe people person
             if person->isbad()
-                si bark true
+                as bark true
+    //no snippet match so keep literal
+    pf bite person
+        ao person injuried true
     set color
+    get color
 ```
 
 Produces:
@@ -35,10 +35,6 @@ class dog
         $this->color = $color;
         $this->bark = false;
     }
-    public function bite($person)
-    {
-        $person->injuried = true;
-    }
     public function bark($people)
     {
         foreach ($people as $person) {
@@ -46,6 +42,11 @@ class dog
                 $this->bark = true;
             }
         }
+    }
+    //no snippet match so keep literal
+    public function bite($person)
+    {
+        $person->injuried = true;
     }
     public function setcolor($color)
     {
