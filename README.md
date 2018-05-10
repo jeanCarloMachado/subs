@@ -11,7 +11,7 @@ The given code:
 ```
 cl Dog
     co color
-      as bark false
+        as bark false
     pf bark people
         fe people person
             if person->isbad()

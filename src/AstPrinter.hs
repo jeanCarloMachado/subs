@@ -20,17 +20,20 @@ iast2string ast = myUnlines $  map node2Str ast
 node2Str :: Node -> String
 node2Str node =
   case currentMatch of
-    Just matchStr -> proc $ matchStr
+    Just matchStr -> proc matchStr
     Nothing       -> proc $ literal node
   where
     proc =  replaceChildrenPart . processArguments args . processIndentation node
-    replaceChildrenPart = replaceChildren $ iast2string $ children node 
+    replaceChildrenPart = replaceChildren $ children node 
     currentMatch = match node
     args = arguments node
+
+
 
 -- Indentation related
 processIndentation node str =
   (setIndentation node . indentationMark node . dropExistingIndentation . addNewLineAfterChildren ) str
+
 
 addNewLineAfterChildren :: String -> String
 addNewLineAfterChildren =
@@ -96,9 +99,9 @@ argHead arguments =
   conditionalVal ((length arguments) > 0) (head arguments) ""
 
 
-replaceChildren :: String -> String -> String
-replaceChildren "" = replace "%c\n" ""
-replaceChildren children = replace "%c" (children)
+replaceChildren :: Ast -> String -> String
+replaceChildren [] = replace "%c" ""
+replaceChildren children = replace "%c" (iast2string children)
 
 --util
 
@@ -106,7 +109,6 @@ conditionalVal predicate trueVal falseVal =
   if predicate
   then trueVal
   else falseVal
-
 
 substringP :: String -> String -> Maybe Int
 substringP _ [] = Nothing
