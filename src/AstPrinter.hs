@@ -21,13 +21,20 @@ iast2string ast = intercalate "\\n" $  map node2Str ast
 node2Str :: Node -> String
 node2Str node =
   case currentMatch of
-    Nothing       -> proc $ literal node
     Just matchStr -> proc $ processArguments matchStr $ arguments node
+    Nothing       -> literal node
   where
-    proc = (\x -> replaceChildren processedChildren $ indentedNode x)
+    proc =  replaceChildrenPart . indentationMarkPart . indentedNode
+    replaceChildrenPart = replaceChildren processedChildren
     processedChildren =  iast2string $ children node 
+    indentationMarkPart = indentationMark node
     indentedNode = addIdentation node
     currentMatch = match node
+
+indentationMark node str =
+  replace "%i" spaces str
+  where
+   spaces =  indentation node `replicate` ' '
 
 processArguments :: MatchSnippet -> [String] -> String
 processArguments matchSnippet arguments =
@@ -69,10 +76,10 @@ replaceChildren "" = replace "%c" ""
 replaceChildren children = replace "%c" children
 
 addIdentation :: Node -> String -> String
-addIdentation node str =
-  replace "\\n" ("\\n" ++ spaces) (spaces ++ str)
+addIdentation node nodeResult =
+  replace "\\n" ("\\n" ++ spaces) (spaces ++ nodeResult)
   where
-   spaces =  identation node `replicate` ' '
+   spaces =  indentation node `replicate` ' '
 
 
 argTail arguments =

@@ -17,7 +17,7 @@ data Node = Node
   , arguments  :: [String]
   , match      :: Maybe String
   , children   :: [Node]
-  , identation :: Int
+  , indentation :: Int
   } deriving (Show)
 
 type MatchSnippet = String
@@ -37,7 +37,7 @@ string2Node inicfg literal =
   , arguments = tail values
   , literal = literalLine
   , children = build inicfg $ tail literal
-  , identation = length $ takeWhile isSpace literalLine
+  , indentation = length $ takeWhile isSpace literalLine
   }
   where
     function = head values
