@@ -39,6 +39,7 @@ run preferedFiletype = do
     ast2String $
     Ast.build (ini, (pack preferedFiletype) : iniSections) inputLines
 
+
 showKeys = do
   ini <- parseConfig
   let iniSections = sections ini
@@ -53,7 +54,7 @@ appendRight acc x =
     Right y -> acc ++ y
 
 sanitizeInput :: [String] -> [String]
-sanitizeInput inputLines = filter (\x -> (length x) > 0) inputLines
+sanitizeInput = filter (\x -> (length x) > 0)
 
 getConfigPath = do
   env <- lookupEnv "SUBS_CONFIG"

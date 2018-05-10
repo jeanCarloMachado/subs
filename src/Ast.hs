@@ -24,7 +24,7 @@ type MatchSnippet = String
 type Ast = [Node]
 type IniCfg = (Ini, [Text])
 
--- BUILD AST
+-- BUILD AST)
 
 build :: IniCfg -> [String] -> Ast
 build inicfg input = map (string2Node inicfg) sameLevel
@@ -71,7 +71,8 @@ getIniMatch ini sections value =
 ast2String :: Ast -> String
 ast2String ast = unlines $ splitStr "\\n" $ iast2string ast
 
-iast2string ast = intercalate "\\n" $ map node2Str ast
+iast2string :: Ast -> String
+iast2string ast = intercalate "\\n" $  map node2Str ast
 
 node2Str :: Node -> String
 node2Str node =
@@ -79,7 +80,9 @@ node2Str node =
     Nothing       -> proc $ literal node
     Just matchStr -> proc $ processArguments matchStr $ arguments node
   where
-    proc = (\x -> replaceChildren (addIdentation node x) $ iast2string $ children node )
+    proc = (\x -> replaceChildren processedChildren $ indentedNode x)
+    processedChildren =  iast2string $ children node 
+    indentedNode = addIdentation node
     currentMatch = match node
 
 processArguments :: MatchSnippet -> [String] -> String
@@ -87,7 +90,6 @@ processArguments matchSnippet arguments =
   processPositionalArguments numericArgumentsProcessed arguments
   where
   numericArgumentsProcessed = processNumericArguments matchSnippet arguments 
-
 
 
 processNumericArguments :: MatchSnippet -> [String] -> String
@@ -117,8 +119,8 @@ processPositionalArguments matchSnippet arguments =
 
 
 replaceChildren :: String -> String -> String
-replaceChildren parent ""       = replace "%c" "" parent
-replaceChildren parent children = replace "%c" children parent
+replaceChildren "" = replace "%c" ""
+replaceChildren children = replace "%c" children
 
 addIdentation :: Node -> String -> String
 addIdentation node str =
