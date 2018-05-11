@@ -24,7 +24,7 @@ node2Str node =
     Nothing       -> proc $ literal node
   where
     proc =  replaceChildrenPart . processArguments args . processIndentation node
-    replaceChildrenPart = replaceChildren $ children node 
+    replaceChildrenPart = replaceChildren $ children node
     currentMatch = match node
     args = arguments node
 
@@ -32,12 +32,8 @@ node2Str node =
 
 -- Indentation related
 processIndentation node str =
-  (setIndentation node . indentationMark node . dropExistingIndentation . addNewLineAfterChildren ) str
+  (setIndentation node . indentationMark node . dropExistingIndentation ) str
 
-
-addNewLineAfterChildren :: String -> String
-addNewLineAfterChildren =
-  replace "%c" "%c\n"
 
 dropExistingIndentation :: String -> String
 dropExistingIndentation =
@@ -52,9 +48,14 @@ indentationMark node =
 
 setIndentation :: Node -> String -> String
 setIndentation node =
-  myUnlines . map (spaces ++) . lines
+  myUnlines . map (foo spaces)  . lines
   where
    spaces =  indentation node `replicate` ' '
+
+foo  spaces line =
+  if substring "%c" line
+  then line
+  else (spaces ++ line)
 
 -- Arguments related
 processArguments ::  Arguments -> MatchSnippet -> String
@@ -101,7 +102,7 @@ argHead arguments =
 
 replaceChildren :: Ast -> String -> String
 replaceChildren [] = replace "%c" ""
-replaceChildren children = replace "%c" (iast2string children)
+replaceChildren children = replace "%c" $ iast2string children
 
 --util
 
@@ -118,3 +119,14 @@ substringP sub str =
     True  -> Just 0
 
 
+substring :: String -> String -> Bool
+substring (x:xs) [] = False
+substring xs ys
+    | prefix xs ys = True
+    | substring xs (tail ys) = True
+    | otherwise = False
+
+prefix :: String -> String -> Bool
+prefix [] ys = True
+prefix (x:xs) [] = False
+prefix (x:xs) (y:ys) = (x == y) && prefix xs ys
