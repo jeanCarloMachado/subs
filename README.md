@@ -95,7 +95,7 @@ class Dog:
         self.color = color
     def bark (people):
         for people in person:
-            if person->isbad():
+            if person.isbad():
                 self.bark = bark
     //no snippet match so keep literal
     def bite (person):
@@ -107,7 +107,7 @@ class Dog:
 ```
 
 
-### Given the proper filetype.
+Given the proper filetype.
 
 
 ## Installation (Linux only):
