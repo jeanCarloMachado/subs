@@ -33,20 +33,20 @@ class Dog
         this.color = color
         self.bark = bark
     }
-    function bark(people) {
+    bark(people) {
         for people in person:
             if (person->isbad()) {
                 self.bark = bark
             }
     }
     //no snippet match so keep literal
-    function bite(person) {
+    bite(person) {
         person.injuried = true
     }
-    function setcolor(color) {
+    set color(color) {
         this.color = color
     }
-    function getcolor() {
+    get color() {
         this.color
     }
 }
