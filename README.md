@@ -3,6 +3,7 @@
 This project aims to reduce the amount of things we type.
 
 ![build status](https://travis-ci.org/jeanCarloMachado/subs.svg?branch=master)
+[![Join the chat at https://gitter.im/subs-subs/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/subs-subs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 ## Examples:
