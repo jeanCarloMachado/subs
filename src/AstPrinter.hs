@@ -48,11 +48,11 @@ indentationMark node =
 
 setIndentation :: Node -> String -> String
 setIndentation node =
-  myUnlines . map (foo spaces)  . lines
+  myUnlines . map (addToNoChildren spaces)  . lines
   where
    spaces =  indentation node `replicate` ' '
 
-foo  spaces line =
+addToNoChildren  spaces line =
   if substring "%c" line
   then line
   else (spaces ++ line)

@@ -6,7 +6,7 @@ This project aims to reduce the amount of things we type.
 
 
 ## Examples:
-The given code:
+### The given code:
 
 ```
 cl Dog
@@ -23,28 +23,55 @@ cl Dog
     get color
 ```
 
-Produces:
+### Produces:
+
+
+```javascript
+class Dog
+{
+    constructor(color) {
+        this.color = color
+        self.bark = bark
+    }
+    function bark(people) {
+        for people in person:
+            if (person->isbad()) {
+                self.bark = bark
+            }
+    }
+    //no snippet match so keep literal
+    function bite(person) {
+        person.injuried = true
+    }
+    function setcolor(color) {
+        this.color = color
+    }
+    function getcolor() {
+        this.color
+    }
+}
+```
+
+### Or
 
 ```php
-class dog
+class Dog
 {
-    private $bark;
-    private $color;
-    public function __constructor($color)
+    public function __construct($color)
     {
         $this->color = $color;
-        $this->bark = false;
+        $this->bark = bark;
     }
-    public function bark($people)
+    public function bark ($people)
     {
         foreach ($people as $person) {
-            if ($person->isbad()) {
-                $this->bark = true;
+            if(person->isbad()) {
+                $this->bark = bark;
             }
         }
     }
     //no snippet match so keep literal
-    public function bite($person)
+    public function bite ($person)
     {
         $person->injuried = true;
     }
@@ -52,10 +79,35 @@ class dog
     {
         $this->color = $color;
     }
+    public function getcolor()
+    {
+        return$this->color;
+    }
 }
 ```
 
-Given the default config. file.
+### Or
+
+
+```python
+class Dog:
+    def __init__(self, color):
+        self.color = color
+    def bark (people):
+        for people in person:
+            if person->isbad():
+                self.bark = bark
+    //no snippet match so keep literal
+    def bite (person):
+        person.injuried = true
+    def setcolor(self,color):
+        self.color = color
+    def getcolor(self):
+        return self.color
+```
+
+
+### Given the proper filetype.
 
 
 ## Installation (Linux only):
