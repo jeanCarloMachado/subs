@@ -5,118 +5,28 @@ This project aims to reduce the amount of things we type.
 ![build status](https://travis-ci.org/jeanCarloMachado/subs.svg?branch=master)
 
 
-## Examples:
-### The given code:
-
-```
-cl Dog
-    co color
-        as bark false
-    pf bark people
-        fe people person
-            if person->isbad()
-                as bark true
-    //no snippet match so keep literal
-    pf bite person
-        ao person injuried true
-    set color
-    get color
-```
-
-### Produces:
+![example](https://i.imgur.com/hBX72p5.gif)
 
 
-```javascript
-class Dog
-{
-    constructor(color) {
-        this.color = color
-        self.bark = bark
-    }
-    function bark(people) {
-        for people in person:
-            if (person->isbad()) {
-                self.bark = bark
-            }
-    }
-    //no snippet match so keep literal
-    function bite(person) {
-        person.injuried = true
-    }
-    function setcolor(color) {
-        this.color = color
-    }
-    function getcolor() {
-        this.color
-    }
-}
-```
+## Installation:
 
-### Or
-
-```php
-class Dog
-{
-    public function __construct($color)
-    {
-        $this->color = $color;
-        $this->bark = bark;
-    }
-    public function bark ($people)
-    {
-        foreach ($people as $person) {
-            if(person->isbad()) {
-                $this->bark = bark;
-            }
-        }
-    }
-    //no snippet match so keep literal
-    public function bite ($person)
-    {
-        $person->injuried = true;
-    }
-    public function setcolor($color)
-    {
-        $this->color = $color;
-    }
-    public function getcolor()
-    {
-        return$this->color;
-    }
-}
-```
-
-### Or
-
-
-```python
-class Dog:
-    def __init__(self, color):
-        self.color = color
-    def bark (people):
-        for people in person:
-            if person.isbad():
-                self.bark = bark
-    //no snippet match so keep literal
-    def bite (person):
-        person.injuried = true
-    def setcolor(self,color):
-        self.color = color
-    def getcolor(self):
-        return self.color
-```
-
-
-Given the proper filetype.
-
-
-## Installation (Linux only):
-
+### Linux:
 ```sh
 sudo wget -O /usr/local/bin/subs "http://jeancarlomachado.net/subs" \
 && sudo chmod +x /usr/local/bin/subs
+```
+
+### Other 
+
+You have to compile for your platform, the only requirement is Haskell stack.
 
 ```
+git clone git@github.com:jeanCarloMachado/subs.git
+cd subs
+make
+make install
+```
+
 
 Create/copy the config file  into `~/.subsconfig.ini`. [This file](https://raw.githubusercontent.com/jeanCarloMachado/subs/master/EXAMPLE.subsconfig.ini) is the default
 one.
