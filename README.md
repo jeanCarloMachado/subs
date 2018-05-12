@@ -59,8 +59,6 @@ The true power of subs comes when you integrate it with your tools.
 For vim, using Tim Pope's textobject integration is simply a matter of:
 
 ```vimscript
-
-
 fun! s:Subs(str)
   let my_filetype = &filetype
   let out = system('subs -p '.my_filetype, a:str."\n")
