@@ -12,7 +12,7 @@ useful for syntax heavy languages.
 
 ## Installation:
 
-### Linux:
+### Linux
 ```sh
 sudo wget -O /usr/local/bin/subs "http://jeancarlomachado.net/subs" \
 && sudo chmod +x /usr/local/bin/subs
@@ -23,7 +23,7 @@ sudo wget -O /usr/local/bin/subs "http://jeancarlomachado.net/subs" \
 
 You have to compile for your platform, the only requirement is Haskell stack.
 
-```
+```sh
 git clone git@github.com:jeanCarloMachado/subs.git
 cd subs
 make
