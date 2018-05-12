@@ -59,14 +59,11 @@ The true power of subs comes when you integrate it with your tools.
 For vim, using Tim Pope's textobject integration is simply a matter of:
 
 ```vimscript
-fun! ChompedSystemCall( ... )
-  return substitute(call('system', a:000), '\n\+$', '', '')
-endfun
 
 
 fun! s:Subs(str)
   let my_filetype = &filetype
-  let out = ChompedSystemCall('subs -p '.my_filetype, a:str."\n")
+  let out = system('subs -p '.my_filetype, a:str."\n")
   return out
 endfunc
 call MapAction('Subs', '<leader>y')
