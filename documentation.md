@@ -43,22 +43,23 @@ class Dog
 {
     constructor(color) {
         this.color = color
-        self.bark = bark
+        this.bark = false
     }
-    function bark(people) {
-        for people in person:
-            if (person->isbad()) {
-                self.bark = bark
+    bark(people) {
+        people.forEach((person) => {
+            if (person.isbad()) {
+                this.bark = true
             }
+        })
     }
     //no snippet match so keep literal
-    function bite(person) {
+    bite(person) {
         person.injuried = true
     }
-    function setcolor(color) {
+    set color(color) {
         this.color = color
     }
-    function getcolor() {
+    get color() {
         this.color
     }
 }
@@ -72,13 +73,13 @@ class Dog
     public function __construct($color)
     {
         $this->color = $color;
-        $this->bark = bark;
+        $this->bark = false;
     }
     public function bark ($people)
     {
         foreach ($people as $person) {
-            if(person->isbad()) {
-                $this->bark = bark;
+            if($person->isbad()) {
+                $this->bark = true;
             }
         }
     }
@@ -108,7 +109,7 @@ class Dog:
     def bark (people):
         for people in person:
             if person.isbad():
-                self.bark = bark
+                self.bark = true
     //no snippet match so keep literal
     def bite (person):
         person.injuried = true
