@@ -1,12 +1,13 @@
 ## subs
 
-This project aims to reduce the amount of things we type.
+This project aims to reduce the amount of things we type. Specially
+useful for syntax heavy languages.
 
 ![build status](https://travis-ci.org/jeanCarloMachado/subs.svg?branch=master)
 [![Join the chat at https://gitter.im/subs-subs/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/subs-subs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
-![example](https://i.imgur.com/hBX72p5.gif)
+![example](https://i.imgur.com/w1C0ok1.gif)
 
 
 ## Installation:
